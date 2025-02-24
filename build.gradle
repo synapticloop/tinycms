@@ -1,0 +1,90 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        maven { url "https://plugins.gradle.org/" }
+        maven { url 'https://jitpack.io' }
+    }
+
+    dependencies {
+        classpath 'com.synapticloop:h2zero:6.0.0'
+    }
+}
+
+plugins {
+    id 'java'
+    id 'application'
+}
+
+apply plugin: 'synapticloop.h2zero'
+
+group 'com.synapticloop.tinycms'
+version '1.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url "https://releases.aspose.com/java/repo" }
+}
+
+ext {
+    junitVersion = '5.10.0'
+}
+
+jar {
+    manifest {
+        from 'MANIFEST.MF'
+    }
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+dependencies {
+    implementation "com.synapticloop:h2zero:6.0.0"
+    implementation "org.slf4j:slf4j-api:1.7.26"
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.23.0'
+
+
+    implementation "javax.mail:javax.mail-api:1.6.2"
+    implementation "org.apache.ant:ant:1.10.14"
+    implementation "org.json:json:20231013"
+
+    implementation 'commons-io:commons-io:2.15.1'
+
+
+    // Database
+    implementation 'com.mchange:c3p0:0.9.5.4'
+    implementation('com.mchange:mchange-commons-java:0.2.20')
+}
+
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            def os = System.getProperty("os.name").toLowerCase()
+            if (os.contains("windows")) {
+                substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') using module("org.eclipse.platform:org.eclipse.swt.win32.win32.x86_64:3.125.0")
+            }
+            else if (os.contains("linux")) {
+                substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') using module ("org.eclipse.platform:org.eclipse.swt.gtk.linux.x86_64:3.114.0")
+            }
+            else if (os.contains("mac")) {
+                substitute module('org.eclipse.platform:org.eclipse.swt.${osgi.platform}') using module ("org.eclipse.platform:org.eclipse.swt.cocoa.macosx.x86_64:3.114.0")
+            }
+        }
+    }
+}
+
+
+h2zero {
+    inFile = './src/main/resources/tinycms.json'
+    outDir = '.'
+    verbose = false
+}
