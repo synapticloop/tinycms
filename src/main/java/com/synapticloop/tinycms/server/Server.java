@@ -1,6 +1,7 @@
 package com.synapticloop.tinycms.server;
 
 import com.synapticloop.tinycms.server.handler.ApiHandler;
+import com.synapticloop.tinycms.server.handler.RestHandler;
 import com.synapticloop.tinycms.server.handler.StaticHandler;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
@@ -21,6 +22,7 @@ public class Server {
 
 
 		bootstrap.registerHandler("/api/*", new ApiHandler());
+		bootstrap.registerHandler("/rest/*", new RestHandler());
 		bootstrap.registerHandler("/*", new StaticHandler());
 		bootstrap.registerHandler("/collection*", new StaticHandler());
 		bootstrap.registerHandler("/schema*", new StaticHandler());

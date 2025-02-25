@@ -24,18 +24,43 @@ public class RestHandler implements HttpRequestHandler {
 		String[] split = resourcePath.split("/");
 		// first one is always 'rest'
 		// second one is the function
-		if(split.length == 1) {
+		if(split.length < 3) {
 			// return 404
-			LOGGER.info("[ ERROR: 404 ] {}", resourcePath);
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("error", true);
-			jsonObject.put("message", "Could not find the resourcePath '" + resourcePath + "'");
-			httpResponse.setStatusCode(HttpStatus.SC_NOT_FOUND);
-			httpResponse.setEntity(new ByteArrayEntity(jsonObject.toString().getBytes(StandardCharsets.UTF_8), ContentType.create("application/json")));
+			return404Response(httpResponse, resourcePath);
 			return;
 		}
 
 		// at this point we will attempt to look up the response
+		// are we doing a GET or a POST
+		String method = httpRequest.getRequestLine().getMethod();
 
+		String action = split[2];
+		System.out.println(action + ":" + method);
+		switch (action) {
+			case "":
+				return404Response(httpResponse, resourcePath);
+				return;
+				case "collection":
+					returnCollectionResponse(method, action, split);
+					return;
+		}
+
+		System.out.println(method);
+
+	}
+
+	private void returnCollectionResponse(String method, String action, String[] split) {
+		System.out.println(action);
+	}
+
+	private static void return404Response(HttpResponse httpResponse, String resourcePath) {
+		LOGGER.info("[ ERROR: 404 ] {}", resourcePath);
+
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("error", true);
+		jsonObject.put("message", "Could not find the REST endpoint.");
+
+		httpResponse.setStatusCode(HttpStatus.SC_NOT_FOUND);
+		httpResponse.setEntity(new ByteArrayEntity(jsonObject.toString().getBytes(StandardCharsets.UTF_8), ContentType.create("application/json")));
 	}
 }
