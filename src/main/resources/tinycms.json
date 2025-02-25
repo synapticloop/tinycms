@@ -1,0 +1,65 @@
+{
+	"options": {
+		"database": "sqlite3",
+		"generators": [
+			"java",
+			"sql"
+		]
+	},
+
+	"database": {
+		"schema": "tinycms",
+		"package": "com.synapticloop.tinycms.sqlite.h2zero",
+		"tables": [
+			{
+				"name": "collection",
+				"fields": [
+					{ "name": "id_collection", "type": "bigint", "nullable": false, "primary": true },
+					{ "name": "nm_collection", "type": "varchar", "length": 256, "nullable": false, "unique": true
+					}
+				]
+			},
+			{
+				"name": "field_type",
+				"fields": [
+					{ "name": "id_field_type", "type": "bigint", "nullable": false, "primary": true },
+					{ "name": "nm_field_type", "type": "varchar", "length": 256, "nullable": false },
+					{ "name": "fl_field_should_quote", "type": "boolean", "nullable": false, "default": "'0'" }
+				],
+				"constants": [
+					{ "name": "STRING", "values": [ 1, "string", 1 ] },
+					{ "name": "TEXT", "values": [ 2, "text", 1 ] },
+					{ "name": "INTEGER", "values": [ 3, "integer", 0 ] },
+					{ "name": "FLOAT", "values": [ 4, "float", 0 ] },
+					{ "name": "BOOLEAN", "values": [ 5, "boolean", 0 ] },
+					{ "name": "MEDIA", "values": [ 6, "media", 1 ] }
+				]
+			},
+			{
+				"name": "field",
+				"fields": [
+					{ "name": "id_field", "type": "bigint", "nullable": false, "primary": true },
+					{ "name": "id_field_type", "type": "bigint", "nullable": false, "foreignKey": "field_type.id_field_type" },
+					{ "name": "id_collection", "type": "bigint", "nullable": false, "foreignKey": "collection.id_collection" },
+					{ "name": "nm_field", "type": "varchar", "length": 256, "nullable": false }
+				]
+			},
+			{
+				"name": "data_collection",
+				"fields": [
+					{ "name": "id_data_collection", "type":  "bigint", "nullable": false, "primary": true },
+					{ "name": "id_collection", "type":  "bigint", "nullable": false, "foreignKey": "collection.id_collection" },
+					{ "name": "nm_collection", "type": "varchar", "length": 256, "nullable": false },
+					{ "name": "fl_is_published", "type":  "boolean", "nullable": false, "default": "'0'" }
+				]
+			},
+			{
+				"name": "data_field",
+				"fields": [
+					{ "name": "id_data_field", "type":  "bigint", "nullable": false, "primary": true },
+					{ "name": "id_field", "type":  "bigint", "nullable": false, "foreignKey": "field.id_field" }
+				]
+			}
+		]
+	}
+}
