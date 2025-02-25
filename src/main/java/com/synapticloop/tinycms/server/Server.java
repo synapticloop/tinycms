@@ -12,8 +12,6 @@ import java.util.concurrent.TimeUnit;
 public class Server {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
-	private HttpServer httpServer;
-
 	public Server() {}
 
 	public void start() throws Exception {
@@ -28,7 +26,7 @@ public class Server {
 		bootstrap.registerHandler("/schema*", new StaticHandler());
 		bootstrap.registerHandler("/data*", new StaticHandler());
 
-		httpServer = bootstrap.create();
+		HttpServer httpServer = bootstrap.create();
 
 		// Attempt to start the server
 		try {

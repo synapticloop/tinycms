@@ -5,7 +5,21 @@ package com.synapticloop.tinycms.sqlite.h2zero;
 //  (java-create-connection-manager-initialise-override.templar)
 
 
+import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.synapticloop.h2zero.base.manager.BaseConnectionManager;
+import com.synapticloop.h2zero.base.manager.sqlite3.ConnectionManager;
 import com.synapticloop.tinycms.sqlite.h2zero.ConnectionManagerInitialiser;
+import com.synapticloop.tinycms.sqlite.h2zero.counter.CollectionCounter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.beans.PropertyVetoException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * <p>
@@ -46,29 +60,91 @@ import com.synapticloop.tinycms.sqlite.h2zero.ConnectionManagerInitialiser;
  * </pre>
  */
 public class ConnectionManagerInitialiserOverride extends ConnectionManagerInitialiser {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManagerInitialiserOverride.class);
+	private static final String DB_DRIVER_CLASS = "org.sqlite.JDBC";
+	private static final String DB_NAME = "tinycms.db";
+
+	private static final ComboPooledDataSource comboPooledDataSource = BaseConnectionManager.comboPooledDataSource;
 
 	public static void initialise() {
-//		// create a new combo pool
-//		ComboPooledDataSource myComboPooledDataSource = new ComboPooledDataSource();
-//		// configure the combopool
-//		try {
-//			myComboPooledDataSource.setDriverClass("db.driver.class");
-//		} catch (PropertyVetoException e) { // runtime exception
-//			throw new RuntimeException(e);
-//		}
-//
-//		try {
-//			myComboPooledDataSource.setLoginTimeout(1);
-//		} catch (SQLException e) {
-//			throw new RuntimeException(e);
-//		}
-//
-//		myComboPooledDataSource.setAcquireIncrement(1);
-//
-//		myComboPooledDataSource.setJdbcUrl("jdbc://");
-//		myComboPooledDataSource.setUser("username");
-//		myComboPooledDataSource.setPassword("password");
-//
-//		addComboPool(CONNECTION_POOL_NAME, myComboPooledDataSource);
+		try {
+			comboPooledDataSource.setDriverClass(DB_DRIVER_CLASS);
+		} catch (PropertyVetoException e) { // runtime exception
+			throw new RuntimeException(e);
+		}
+		// now we need to check for backups and whatnot
+
+		String jdbcUrl = "jdbc:sqlite:/" + System.getProperty("user.dir") + "/" + DB_NAME;
+		LOGGER.info("JDBC URL is {}", jdbcUrl);
+		comboPooledDataSource.setJdbcUrl(jdbcUrl);
+
+
+		vacuumDatabase();
+
+		if (!doesDatabaseExist()) {
+			createDatabase();
+		}
 	}
+
+	public static void closeDatabase() {
+		vacuumDatabase();
+		comboPooledDataSource.close();
+	}
+
+	public static void vacuumDatabase() {
+		try {
+			Connection connection = ConnectionManager.getConnection();
+			PreparedStatement preparedStatement = connection.prepareStatement("VACUUM");
+			preparedStatement.execute();
+
+		} catch (SQLException e) {
+			// NOT much we can do
+		}
+	}
+
+	private static boolean doesDatabaseExist() {
+		try {
+			CollectionCounter.countAll();
+		} catch (SQLException ex) {
+			return (false);
+		}
+
+		return (true);
+	}
+
+	private static void createDatabase() {
+		try {
+			Connection connection = ConnectionManager.getConnection();
+			BufferedReader bufferedReader = new BufferedReader(
+					new InputStreamReader(
+							ConnectionManagerInitialiserOverride.class.getResourceAsStream("/create-database-sqlite3.sql")));
+			String line = null;
+			StringBuilder query = new StringBuilder();
+
+			while ((line = bufferedReader.readLine()) != null) {
+				if (!line.startsWith("--") && !line.trim().isEmpty()) {
+					query.append(line);
+				} else {
+					continue;
+				}
+
+				if (line.trim().endsWith(";")) {
+					// execute the query and
+					if (line.trim().isEmpty()) {
+						// we don't want to run an empty query
+						continue;
+					}
+					PreparedStatement preparedStatement = connection.prepareStatement(query.toString());
+					preparedStatement.execute();
+					preparedStatement.close();
+					query.setLength(0);
+				}
+			}
+
+		} catch (IOException | SQLException e) {
+			// TODO - this is going to be a problem
+			e.printStackTrace();
+		}
+	}
+
 }
