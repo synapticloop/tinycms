@@ -4,14 +4,14 @@ export default function NavSideBar() {
 				<div className="position-sticky py-4 px-3 sidebar-sticky">
 					<ul className="nav flex-column h-100">
 						<li className="nav-item">
-							<a className="nav-link active" aria-current="page" href="/">
+							<a className="nav-link" aria-current="page" href="/">
 								<i className="bi-house-fill me-2"></i>
 								Overview
 							</a>
 						</li>
 
 						<li className="nav-item">
-							<a className="nav-link" aria-current="page" href="/collections">
+							<a className="nav-link" aria-current="page" href="/collection/">
 								<i className="bi-house-fill me-2"></i>
 								Collections
 							</a>

@@ -3,11 +3,11 @@
 -----------------------------------------*/
 :root {
   --white-color:                  #ffffff;
-  --primary-color:                #E63946;
+  --primary-color: #000000;
   --secondary-color:              #F1FAEE;
   --section-bg-color:             #ececec;
-  --primary-bg-color:             #E63946;
-  --custom-btn-bg-color:          #A8DADC;
+  --primary-bg-color: #6e6565;
+  --custom-btn-bg-color: #7697d1;
   --custom-btn-bg-hover-color:    #1D3557;
   --heading-color:                #1D3557;
   --dark-color:                   #000000;
