@@ -1,12 +1,17 @@
 package com.synapticloop.tinycms.server;
 
 import com.synapticloop.tinycms.server.handler.ApiHandler;
+import com.synapticloop.tinycms.server.handler.StaticHandler;
 import org.apache.http.impl.bootstrap.HttpServer;
 import org.apache.http.impl.bootstrap.ServerBootstrap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class Server {
+	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
+
 	private HttpServer httpServer;
 
 	public Server() {}
@@ -16,14 +21,20 @@ public class Server {
 				.bootstrap()
 				.setListenerPort(8080);
 
-		httpServer = bootstrap.create();
 
-		bootstrap.registerHandler("/api/*", new ApiHandler())
+		bootstrap.registerHandler("/api/*", new ApiHandler());
+		bootstrap.registerHandler("/*", new StaticHandler());
+		bootstrap.registerHandler("/collection*", new StaticHandler());
+		bootstrap.registerHandler("/schema*", new StaticHandler());
+		bootstrap.registerHandler("/data*", new StaticHandler());
+
+		httpServer = bootstrap.create();
 
 		// Attempt to start the server
 		try {
+			LOGGER.info("Starting server on port {}", httpServer.getLocalPort());
 			httpServer.start();
-//			LOGGER.info("Server started on port {}", httpServer.getLocalPort());
+			LOGGER.info("Server started on port {}", httpServer.getLocalPort());
 			Runtime.getRuntime().addShutdownHook(new Thread(httpServer::stop));
 			httpServer.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
 		} catch (Exception e) {

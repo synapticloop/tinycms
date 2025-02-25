@@ -31,12 +31,12 @@ public class FieldType  {
 	@SuppressWarnings("unused")
 	private static final String BINDER = Constants.FIELD_TYPE_BINDER;
 
-	public static final FieldType STRING = new FieldType(Long.valueOf(1), "string", Boolean.valueOf(1));
-	public static final FieldType TEXT = new FieldType(Long.valueOf(2), "text", Boolean.valueOf(1));
-	public static final FieldType INTEGER = new FieldType(Long.valueOf(3), "integer", Boolean.valueOf(0));
-	public static final FieldType FLOAT = new FieldType(Long.valueOf(4), "float", Boolean.valueOf(0));
-	public static final FieldType BOOLEAN = new FieldType(Long.valueOf(5), "boolean", Boolean.valueOf(0));
-	public static final FieldType MEDIA = new FieldType(Long.valueOf(6), "media", Boolean.valueOf(1));
+	public static final FieldType STRING = new FieldType(Long.valueOf(1), "string", Boolean.valueOf("1"));
+	public static final FieldType TEXT = new FieldType(Long.valueOf(2), "text", Boolean.valueOf("1"));
+	public static final FieldType INTEGER = new FieldType(Long.valueOf(3), "integer", Boolean.valueOf("0"));
+	public static final FieldType FLOAT = new FieldType(Long.valueOf(4), "float", Boolean.valueOf("0"));
+	public static final FieldType BOOLEAN = new FieldType(Long.valueOf(5), "boolean", Boolean.valueOf("0"));
+	public static final FieldType MEDIA = new FieldType(Long.valueOf(6), "media", Boolean.valueOf("1"));
  	public static final Long STRING_PRIMARY_KEY_VALUE = Long.valueOf(1);
  	public static final Long TEXT_PRIMARY_KEY_VALUE = Long.valueOf(2);
  	public static final Long INTEGER_PRIMARY_KEY_VALUE = Long.valueOf(3);

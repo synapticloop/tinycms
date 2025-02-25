@@ -27,12 +27,12 @@
 					{ "name": "fl_field_should_quote", "type": "boolean", "nullable": false, "default": "'0'" }
 				],
 				"constants": [
-					{ "name": "STRING", "values": [ 1, "string", 1 ] },
-					{ "name": "TEXT", "values": [ 2, "text", 1 ] },
-					{ "name": "INTEGER", "values": [ 3, "integer", 0 ] },
-					{ "name": "FLOAT", "values": [ 4, "float", 0 ] },
-					{ "name": "BOOLEAN", "values": [ 5, "boolean", 0 ] },
-					{ "name": "MEDIA", "values": [ 6, "media", 1 ] }
+					{ "name": "STRING", "values": [ 1, "string", "1" ] },
+					{ "name": "TEXT", "values": [ 2, "text", "1" ] },
+					{ "name": "INTEGER", "values": [ 3, "integer", "0" ] },
+					{ "name": "FLOAT", "values": [ 4, "float", "0" ] },
+					{ "name": "BOOLEAN", "values": [ 5, "boolean", "0" ] },
+					{ "name": "MEDIA", "values": [ 6, "media", "1" ] }
 				]
 			},
 			{
