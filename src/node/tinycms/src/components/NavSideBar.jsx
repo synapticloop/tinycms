@@ -23,14 +23,14 @@ export default function NavSideBar() {
 						</li>
 
 						<li className="nav-item">
-							<a className="nav-link" href="/data">
+							<a className={"nav-link " + (pathname.startsWith("/data") ? 'active' : '')} aria-current="page" href="/data/">
 								<i className="bi-wallet me-2"></i>
 								Data
 							</a>
 						</li>
 
 						<li className="nav-item">
-							<a className="nav-link" href="/schema">
+							<a className={"nav-link " + (pathname.startsWith("/schema") ? 'active' : '')} aria-current="page" href="/schema/">
 								<i className="bi-gear me-2"></i>
 								Schema
 							</a>
